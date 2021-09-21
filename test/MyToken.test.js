@@ -1,14 +1,7 @@
 const Token = artifacts.require('MyToken');
 
-var chai = require('chai');
-
+const chai = require('./chaisetup');
 const BN = web3.utils.BN;
-const chaiBN = require('chai-bn')(BN);
-chai.use(chaiBN);
-
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
-
 const expect = chai.expect;
 
 require('dotenv').config({ path: '../.env' });
@@ -42,7 +35,7 @@ contract('Token Test', async (accounts) => {
     await expect(
       instance.balanceOf(initialHolder)
     ).to.eventually.be.a.bignumber.equal(totalSupply.sub(new BN(sendTokens)));
-    await expect(
+    return await expect(
       instance.balanceOf(recipient)
     ).to.eventually.be.a.bignumber.equal(new BN(sendTokens));
   });
@@ -53,7 +46,7 @@ contract('Token Test', async (accounts) => {
 
     await expect(instance.transfer(recipient, new BN(balanceOfAccount + 1))).to
       .eventually.be.rejected;
-    await expect(
+    return await expect(
       instance.balanceOf(initialHolder)
     ).to.eventually.be.a.bignumber.equal(balanceOfAccount);
   });
